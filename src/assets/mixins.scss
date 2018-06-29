@@ -1,25 +1,42 @@
-$length: 50px;
-$backgroundColor: silver;
-$boder : 1px black solid;
-$margin: 2px;
+$length: 60px;
+$backgroundColor: dimgrey;
+$boder : 1px rgb(223, 223, 223) solid;
+$margin: 8px;
 $font-height: 20px;
+$font-color: white;
+$radius: 5%;
 
 button {
-
+    padding: 0;
+    height: $length;
+    border: none;
+    outline: none;
     background-color:$backgroundColor;
-    border: $boder;
     margin: $margin;
     font-size: $font-height;
     display: block;
+    color: $font-color;
+    border-radius: $radius;
+}
+
+button:hover{
+    color:  blue;
+    font-weight: 700;
+}
+
+button:active{
+    box-shadow: 0 0px 0px 0 hsla(0, 0, 0, 0.2);
 }
 
 p {
     height: $length;
-    border: $boder;
+    border-bottom: $boder;
     text-align: left;
     font-size: $length - 5px;
     padding-left: 5px;
     display: flex;
     align-items: center;
+    margin:$length / 3 0;
+    box-shadow: inset 0 2px 4px 0 hsla(0, 0, 0, 0.08);
 }
 

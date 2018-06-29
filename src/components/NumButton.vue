@@ -11,4 +11,7 @@
 
 <style scoped lang="scss">
 @import "../assets/mixins";
+button{
+    box-shadow: 0 4px 3px 0 hsl(0, 0, 20);
+}
 </style>

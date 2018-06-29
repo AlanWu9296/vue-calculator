@@ -41,7 +41,6 @@ let symbolDict = {
                 isPrime:true,
                 memData: null,
                 operator: null,
-
             }
         },
         components:{
@@ -122,16 +121,12 @@ let symbolDict = {
 
 <style scoped >
 #container{
-    margin: 0 25%;
-    width: 50%;
+    margin: 0 35%;
+    width: 30%;
     display: grid;
     grid-template-areas: 
     "d d d d"
     "f f f s"
-    "n n n s"
-    "n n n s"
-    "n n n s"
-    "n n n s"
     "n n n s"
     ;
 }
@@ -153,6 +148,8 @@ let symbolDict = {
 }
 
 #symbol-pad{
+    grid-area: s;
     display: grid;
+    align-content: stretch
 }
 </style>

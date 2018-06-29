@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <img src="./assets/logo.png">
+    <h1>Vue Calculator Sample</h1>
     <calculator />
   </div>
 </template>
@@ -24,5 +25,10 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+h1{
+  margin: 10px;
+  color:green;
 }
 </style>
