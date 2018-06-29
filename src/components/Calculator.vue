@@ -1,0 +1,158 @@
+<template>
+    <div id="container">
+        <display-bar :displayData="displayData" id="display"/>
+        <div id="func-pad">
+            <symbol-button v-for="item in symbols.slice(0,3)" :key="item.id" :name="item" @symClicked="handleSymbol($event)"/>
+        </div>
+        <div id="num-pad">
+            <number-button v-for="num in numbers" :key="num" :name="num" @numClicked="changeDisplay($event)"/>
+        </div>
+        <div id="symbol-pad">
+            <symbol-button v-for="item in symbols.slice(3,10)" :key="item.id" :name="item" @symClicked="handleSymbol($event)"/>
+        </div>
+    </div>
+</template>
+
+<script>
+const _ = require('lodash')
+import NumberButton from "./NumButton"
+import SymbolButton from "./SymbolButton"
+import DisplayBar from "./DisplayBar"
+
+let numbers = ['1','2','3','4','5','6','7','8','9','0',".","C"]
+let symbols = ["AC","+/-","%",'+','-','*','/','=']
+let symbolDict = {
+    '+':_.add,
+    '-':_.subtract,
+    '*':_.multiply,
+    '/':_.divide,
+    '=':a => a
+}
+
+    export default {
+        name:"calculator",
+        data(){
+            return {
+                numbers,
+                symbols,
+                symbolDict,
+                displayData:"",
+                isNew:true,
+                isPrime:true,
+                memData: null,
+                operator: null,
+
+            }
+        },
+        components:{
+            NumberButton,
+            SymbolButton,
+            DisplayBar,
+        },
+        methods:{
+            initialize(){
+                this.isNew = true
+                this.isPrime = true
+                this.displayData = ""
+                this.memData = null
+                this.operator = null
+            },
+
+            calculate(operator,data){
+                this.memData = this.symbolDict[operator](this.memData, data)
+                this.displayData = this.memData.toString()
+            },
+
+            decide(operator,data){
+                if(this.isNew){
+                    this.calculate(operator,data)
+                }else{
+                    this.displayData = this.symbolDict[operator](parseInt(this.displayData), data).toString()
+                }
+                this.operator = null
+            },
+
+            changeDisplay(e){
+                if (e!=="C"){
+                    if(this.isNew){
+                        this.displayData = e
+                        this.isNew = false
+                    }else{
+                        this.displayData += e
+                    }
+                } else{
+                    if(this.isNew){
+                        this.initialize()
+                    }else{
+                        let l = this.displayData.length
+                        this.displayData = this.displayData.substr(0,l-1)
+                    }
+                }
+            },
+
+            handleSymbol(e){
+                if(e==="AC"){
+                    this.initialize()
+                }
+                else if(e==="+/-"){
+                    this.decide("*",-1)
+                }
+                else if(e==="%"){
+                    this.decide("*",0.01)
+                }
+                else{
+                    if(! this.isPrime){
+
+                            this.operator = this.operator ? this.operator : e
+                            this.memData = this.symbolDict[this.operator](this.memData, parseFloat(this.displayData))
+                            this.operator = e
+                            this.displayData = this.memData.toString()
+                        }
+                    else{
+                        this.memData = parseInt(this.displayData)
+                        this.isPrime = false
+                        this.operator = e
+                    }
+            }
+            this.isNew = true
+        }
+    }
+}
+</script>
+
+<style scoped >
+#container{
+    margin: 0 25%;
+    width: 50%;
+    display: grid;
+    grid-template-areas: 
+    "d d d d"
+    "f f f s"
+    "n n n s"
+    "n n n s"
+    "n n n s"
+    "n n n s"
+    "n n n s"
+    ;
+}
+
+#display{
+    grid-area: d;
+}
+
+#func-pad{
+    grid-area: f;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+}
+
+#num-pad{
+    grid-area: n;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+}
+
+#symbol-pad{
+    display: grid;
+}
+</style>

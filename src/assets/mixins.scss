@@ -1,0 +1,25 @@
+$length: 50px;
+$backgroundColor: silver;
+$boder : 1px black solid;
+$margin: 2px;
+$font-height: 20px;
+
+button {
+
+    background-color:$backgroundColor;
+    border: $boder;
+    margin: $margin;
+    font-size: $font-height;
+    display: block;
+}
+
+p {
+    height: $length;
+    border: $boder;
+    text-align: left;
+    font-size: $length - 5px;
+    padding-left: 5px;
+    display: flex;
+    align-items: center;
+}
+
