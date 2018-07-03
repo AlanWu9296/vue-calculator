@@ -7,7 +7,7 @@
         name:"SymbolButton",
         props:["name","timeInterval","keyCodeDict"],
         computed:{
-            keyCode(){
+        keyCode(){
                 let parseCode = parseInt(this.name)
                 if(parseCode || parseCode===0){
                     return [parseCode+48,parseCode+96]

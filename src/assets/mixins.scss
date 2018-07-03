@@ -1,17 +1,18 @@
 $length: 60px;
 $backgroundColor: darkgrey;
-$boder : 1px rgb(223, 223, 223) solid;
+$boder: 1px rgb(223, 223, 223) solid;
 $margin: 8px;
 $font-height: 20px;
 $font-color: white;
 $radius: 5%;
+$padding: 10px;
 
 button {
     padding: 0;
     height: $length;
     border: none;
     outline: none;
-    background-color:$backgroundColor;
+    background-color: $backgroundColor;
     margin: $margin;
     font-size: $font-height;
     display: block;
@@ -19,11 +20,10 @@ button {
     border-radius: $radius;
 }
 
-button:active{
+button:active {
     box-shadow: 0 0px 0px 0 hsla(0, 0, 0, 0.2);
 }
 
 .active {
     box-shadow: 0 0px 0px 0 hsla(0, 0, 0, 0.2);
 }
-

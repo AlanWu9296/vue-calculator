@@ -2,22 +2,21 @@
     <div id="container" >
         <display-bar :displayData="displayData" id="display"/>
         <div id="func-pad">
-            <symbol-button v-for="item in symbols.slice(0,3)" :key="item.id" :name="item" :timeInterval="150" :keyCodeDict="codeDict" @symClicked="handleSymbol($event)"/>
+            <base-button v-for="item in symbols.slice(0,3)" :key="item.id" :name="item" :timeInterval="150" :keyCodeDict="codeDict" :eventName="'symClicked'" @symClicked="handleSymbol($event)"/>
         </div>
         <div id="num-pad">
-            <number-button v-for="num in numbers" :key="num" :name="num" :timeInterval="150" :keyCodeDict="codeDict" @numClicked="changeDisplay($event)"/>
+            <base-button v-for="num in numbers" :key="num" :name="num" :timeInterval="150" :keyCodeDict="codeDict" :eventName="'numClicked'" @numClicked="changeDisplay($event)"/>
         </div>
         <div id="symbol-pad">
-            <symbol-button v-for="item in symbols.slice(3,10)" :key="item.id" :name="item" :timeInterval="150" :keyCodeDict="codeDict" @symClicked="handleSymbol($event)"/>
+            <base-button v-for="item in symbols.slice(3,10)" :key="item.id" :name="item" :timeInterval="150" :keyCodeDict="codeDict" :eventName="'symClicked'" @symClicked="handleSymbol($event)"/>
         </div>
     </div>
 </template>
 
 <script>
 const _ = require('lodash')
-import NumberButton from "./NumButton"
-import SymbolButton from "./SymbolButton"
 import DisplayBar from "./DisplayBar"
+import BaseButton from "./_Button"
 
 let numbers = ['1','2','3','4','5','6','7','8','9','0',".","C"]
 let symbols = ["AC","+/-","%",'+','-','*','/','=']
@@ -56,9 +55,8 @@ let symbolDict = {
             }
         },
         components:{
-            NumberButton,
-            SymbolButton,
             DisplayBar,
+            BaseButton,
         },
         methods:{
             initialize(){
@@ -130,7 +128,7 @@ let symbolDict = {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 #container{
     border-bottom: 8px darkgrey solid;
     border-radius: 6% 6% 3% 3%;
@@ -154,17 +152,41 @@ let symbolDict = {
     grid-area: f;
     display: grid;
     grid-template-columns: repeat(3,1fr);
+    button{
+        color: black;
+        background-color: sandybrown;
+        box-shadow: 0 4px 3px 0 peru;
+    }
+
+    button:hover{
+        color: FIREBRICK;
+    }
 }
 
 #num-pad{
     grid-area: n;
     display: grid;
     grid-template-columns: repeat(3,1fr);
-}
+    button{
+        box-shadow: 0 4px 3px 0 hsl(0, 0, 50);
+    }
+    button:hover{
+            color: coral;
+        }
+    };
 
 #symbol-pad{
     grid-area: s;
     display: grid;
-    align-content: stretch
+    align-content: stretch;
+    button{
+        color: black;
+        background-color: sandybrown;
+        box-shadow: 0 4px 3px 0 peru;
+    }
+
+    button:hover{
+        color: FIREBRICK;
+    }
 }
 </style>

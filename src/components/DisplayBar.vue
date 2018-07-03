@@ -13,7 +13,7 @@
 
 <style scoped lang="scss">
 @import "../assets/mixins";
-$padding : 10px;
+
 div {
     height: $length;
     text-align: left;
