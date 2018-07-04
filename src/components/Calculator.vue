@@ -4,7 +4,7 @@
         <div id="func-pad">
             <base-button v-for="item in symbols.slice(0,3)" :key="item.id" :name="item" :timeInterval="150" :keyCodeDict="codeDict" :eventName="'symClicked'" @symClicked="handleSymbol($event)"/>
         </div>
-        <div id="num-pad">
+        <div id="num-pad" is="transition-group" name="show" appear>
             <base-button v-for="num in numbers" :key="num" :name="num" :timeInterval="150" :keyCodeDict="codeDict" :eventName="'numClicked'" @numClicked="changeDisplay($event)"/>
         </div>
         <div id="symbol-pad">
@@ -43,7 +43,7 @@ let symbolDict = {
         name:"calculator",
         data(){
             return {
-                numbers,
+                numbers:[],
                 symbols,
                 symbolDict,
                 codeDict,
@@ -57,6 +57,21 @@ let symbolDict = {
         components:{
             DisplayBar,
             BaseButton,
+        },
+        mounted(){
+            let self = this
+            let i = 0
+            let id = setInterval(
+                function(){
+                    if(i<numbers.length){
+                        self.numbers.push(numbers[i])
+                        i++
+                    }else{
+                        clearInterval(id)
+                    }
+                },
+                250
+            )
         },
         methods:{
             initialize(){
@@ -188,5 +203,17 @@ let symbolDict = {
     button:hover{
         color: FIREBRICK;
     }
+}
+
+.show-enter-active{
+    transition: opacity 1s;
+}
+
+.show-enter{
+    opacity: 0;
+}
+
+.show-move{
+    transition: transform 0.2s;
 }
 </style>
