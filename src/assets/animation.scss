@@ -1,0 +1,37 @@
+.show-enter-active {
+    transition: all 2.5s;
+}
+
+.show-enter {
+    opacity: 0;
+}
+
+.pop-move {
+    transition: transform 1s;
+}
+
+.pop-enter-active {
+    transition: all 1s;
+}
+
+.pop-enter {
+    transform: scale(0);
+}
+
+.slide-enter-active {
+    transition: height 1s ease;
+}
+
+.slide-enter {
+    height: 0;
+    opacity: 0;
+}
+
+.drop-enter-active{
+    transition: transform 2s ease, opacity 2s;
+}
+
+.drop-enter{
+    transform: translateY(-5000px);
+    opacity: 0; 
+}

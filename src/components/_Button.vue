@@ -1,5 +1,5 @@
 <template>
-    <button @click="$emit(eventName, name)">{{name}}</button>
+    <button  @click="$emit(eventName, name)">{{name}}</button>
 </template>
 
 <script>
@@ -31,25 +31,5 @@
 </script>
 
 <style scoped lang="scss">
-@import '../assets/mixins.scss';
-button {
-    padding: 0;
-    height: $length;
-    border: none;
-    outline: none;
-    background-color: $backgroundColor;
-    margin: $margin;
-    font-size: $font-height;
-    display: block;
-    color: $font-color;
-    border-radius: $radius;
-}
-
-button:active {
-    box-shadow: 0 0px 0px 0 hsla(0, 0, 0, 0.2);
-}
-
-.active {
-    box-shadow: 0 0px 0px 0 hsla(0, 0, 0, 0.2);
-}
+@import "../assets/mixins.scss";
 </style>

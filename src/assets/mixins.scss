@@ -7,23 +7,22 @@ $font-color: white;
 $radius: 5%;
 $padding: 10px;
 
-button {
-    padding: 0;
-    height: $length;
-    border: none;
-    outline: none;
-    background-color: $backgroundColor;
-    margin: $margin;
-    font-size: $font-height;
-    display: block;
-    color: $font-color;
-    border-radius: $radius;
-}
+    button:active {
+        box-shadow: 0 0px 0px 0 black;
+    }
 
-button:active {
-    box-shadow: 0 0px 0px 0 hsla(0, 0, 0, 0.2);
-}
+    .active {
+        box-shadow: 0 0px 0px 0 black;
+    }
 
-.active {
-    box-shadow: 0 0px 0px 0 hsla(0, 0, 0, 0.2);
-}
+    button {
+        padding: 0;
+        height: $length;
+        border: none;
+        outline: none;
+        margin: $margin;
+        font-size: $font-height;
+        display: block;
+        color: $font-color;
+        border-radius: $radius;
+    }

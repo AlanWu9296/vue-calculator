@@ -1,22 +1,27 @@
 <template >
-    <div id="container" >
-        <display-bar :displayData="displayData" id="display"/>
-        <div id="func-pad">
-            <base-button v-for="item in symbols.slice(0,3)" :key="item.id" :name="item" :timeInterval="150" :keyCodeDict="codeDict" :eventName="'symClicked'" @symClicked="handleSymbol($event)"/>
+    <transition name="show" appear>
+        <div id="container">
+            <transition name="slide" appear>
+                <display-bar :displayData="displayData" id="display" v-if="animStep>=1"/>
+            </transition>
+            <div id="func-pad" is="transition-group" name="slide" appear v-if="animStep>=2">
+                <sym-button v-for="item in symbols.slice(0,3)" :key="item" :name="item" :timeInterval="150" :keyCodeDict="codeDict" :eventName="'symClicked'" @symClicked="handleSymbol($event)"/>
+            </div>
+            <div id="num-pad" is="transition-group" name="pop" appear v-if="animStep>=3">
+                <num-button v-for="num in numbers" :key="num" :name="num" :timeInterval="150" :keyCodeDict="codeDict" :eventName="'numClicked'" @numClicked="changeDisplay($event)"/>
+            </div>
+            <div id="symbol-pad" is="transition-group" name="drop" appear >
+                <sym-button v-for="item in functions" :key="item" :name="item" :timeInterval="150" :keyCodeDict="codeDict" :eventName="'symClicked'" @symClicked="handleSymbol($event)"/>
+            </div>
         </div>
-        <div id="num-pad" is="transition-group" name="show" appear>
-            <base-button v-for="num in numbers" :key="num" :name="num" :timeInterval="150" :keyCodeDict="codeDict" :eventName="'numClicked'" @numClicked="changeDisplay($event)"/>
-        </div>
-        <div id="symbol-pad">
-            <base-button v-for="item in symbols.slice(3,10)" :key="item.id" :name="item" :timeInterval="150" :keyCodeDict="codeDict" :eventName="'symClicked'" @symClicked="handleSymbol($event)"/>
-        </div>
-    </div>
+    </transition>
 </template>
 
 <script>
 const _ = require('lodash')
 import DisplayBar from "./DisplayBar"
-import BaseButton from "./_Button"
+import NumButton from "./NumButton"
+import SymButton from "./SymButton"
 
 let numbers = ['1','2','3','4','5','6','7','8','9','0',".","C"]
 let symbols = ["AC","+/-","%",'+','-','*','/','=']
@@ -39,118 +44,138 @@ let symbolDict = {
     '=':a => a
 }
 
-    export default {
-        name:"calculator",
-        data(){
-            return {
-                numbers:[],
-                symbols,
-                symbolDict,
-                codeDict,
-                displayData:"",
-                isNew:true,
-                isPrime:true,
-                memData: null,
-                operator: null,
-            }
-        },
-        components:{
-            DisplayBar,
-            BaseButton,
-        },
-        mounted(){
-            let self = this
-            let i = 0
-            let id = setInterval(
-                function(){
-                    if(i<numbers.length){
-                        self.numbers.push(numbers[i])
-                        i++
-                    }else{
-                        clearInterval(id)
-                    }
-                },
-                250
-            )
-        },
-        methods:{
-            initialize(){
-                this.isNew = true
-                this.isPrime = true
-                this.displayData = ""
-                this.memData = null
-                this.operator = null
-            },
-
-            calculate(operator,data){
-                this.memData = this.symbolDict[operator](this.memData, data)
-                this.displayData = this.memData.toString()
-            },
-
-            decide(operator,data){
-                if(this.isNew){
-                    this.calculate(operator,data)
-                }else{
-                    this.displayData = this.symbolDict[operator](parseInt(this.displayData), data).toString()
-                }
-                this.operator = null
-            },
-
-            changeDisplay(e){
-                if (e!=="C"){
-                    if(this.isNew){
-                        this.displayData = e
-                        this.isNew = false
-                    }else{
-                        this.displayData += e
-                    }
-                } else{
-                    if(this.isNew){
-                        this.initialize()
-                    }else{
-                        let l = this.displayData.length
-                        this.displayData = this.displayData.substr(0,l-1)
-                    }
-                }
-            },
-
-            handleSymbol(e){
-                if(e==="AC"){
-                    this.initialize()
-                }
-                else if(e==="+/-"){
-                    this.decide("*",-1)
-                }
-                else if(e==="%"){
-                    this.decide("*",0.01)
-                }
-                else{
-                    if(! this.isPrime){
-                            this.operator = this.operator ? this.operator : e
-                            this.memData = this.symbolDict[this.operator](this.memData, parseFloat(this.displayData))
-                            this.operator = e
-                            this.displayData = this.memData.toString()
-                        }
-                    else{
-                        this.memData = parseInt(this.displayData)
-                        this.isPrime = false
-                        this.operator = e
-                    }
-            }
-            this.isNew = true
+export default {
+    name:"calculator",
+    data(){
+        return {
+            numbers,
+            symbols:symbols.slice(0,3),
+            functions:[],
+            symbolDict,
+            codeDict,
+            displayData:"",
+            isNew:true,
+            isPrime:true,
+            memData: null,
+            operator: null,
+            animStep:null
         }
+    },
+    components:{
+        DisplayBar,
+        SymButton,
+        NumButton,
+    },
+    mounted(){
+        let self = this
+        let i = 0
+        let j = 0
+        let id2 = setInterval(
+            function(){
+                if(j<=4){
+                    self.animStep = j
+                    j++
+                }else{
+                    clearInterval(id2)
+                }
+            },
+            400
+        )
+        let functions = symbols.slice(3,10)
+        let id = setInterval(
+            function(){
+                if(i<functions.length){
+                    self.functions.push(functions[i])
+                    i++
+                }else{
+                    clearInterval(id)
+                }
+            },
+            200
+        )
+    },
+    methods:{
+        initialize(){
+            this.isNew = true
+            this.isPrime = true
+            this.displayData = ""
+            this.memData = null
+            this.operator = null
+        },
+
+        calculate(operator,data){
+            this.memData = this.symbolDict[operator](this.memData, data)
+            this.displayData = this.memData.toString()
+        },
+
+        decide(operator,data){
+            if(this.isNew){
+                this.calculate(operator,data)
+            }else{
+                this.displayData = this.symbolDict[operator](parseInt(this.displayData), data).toString()
+            }
+            this.operator = null
+        },
+
+        changeDisplay(e){
+            if (e!=="C"){
+                if(this.isNew){
+                    this.displayData = e
+                    this.isNew = false
+                }else{
+                    this.displayData += e
+                }
+            } else{
+                if(this.isNew){
+                    this.initialize()
+                }else{
+                    let l = this.displayData.length
+                    this.displayData = this.displayData.substr(0,l-1)
+                }
+            }
+        },
+
+        handleSymbol(e){
+            if(e==="AC"){
+                this.initialize()
+            }
+            else if(e==="+/-"){
+                this.decide("*",-1)
+            }
+            else if(e==="%"){
+                this.decide("*",0.01)
+            }
+            else{
+                if(! this.isPrime){
+                        this.operator = this.operator ? this.operator : e
+                        this.memData = this.symbolDict[this.operator](this.memData, parseFloat(this.displayData))
+                        this.operator = e
+                        this.displayData = this.memData.toString()
+                    }
+                else{
+                    this.memData = parseInt(this.displayData)
+                    this.isPrime = false
+                    this.operator = e
+                }
+        }
+        this.isNew = true
     }
+}
 }
 </script>
 
 <style scoped lang="scss">
+@import "../assets/animation.scss";
+@import "../assets/mixins.scss";
+
 #container{
     border-bottom: 8px darkgrey solid;
     border-radius: 6% 6% 3% 3%;
     padding: 2%;
     background: linear-gradient(0deg, lightgrey, gainsboro);
     margin: 0 auto;
-    width: 25%;
+    width: 500px;
+    height: $length*8;
     display: grid;
     grid-template-areas: 
     "d d d d"
@@ -158,6 +183,7 @@ let symbolDict = {
     "n n n s"
     ;
 }
+
 
 #display{
     grid-area: d;
@@ -167,53 +193,19 @@ let symbolDict = {
     grid-area: f;
     display: grid;
     grid-template-columns: repeat(3,1fr);
-    button{
-        color: black;
-        background-color: sandybrown;
-        box-shadow: 0 4px 3px 0 peru;
-    }
-
-    button:hover{
-        color: FIREBRICK;
-    }
 }
 
 #num-pad{
     grid-area: n;
     display: grid;
     grid-template-columns: repeat(3,1fr);
-    button{
-        box-shadow: 0 4px 3px 0 hsl(0, 0, 50);
-    }
-    button:hover{
-            color: coral;
-        }
-    };
+}
 
 #symbol-pad{
     grid-area: s;
     display: grid;
     align-content: stretch;
-    button{
-        color: black;
-        background-color: sandybrown;
-        box-shadow: 0 4px 3px 0 peru;
-    }
 
-    button:hover{
-        color: FIREBRICK;
-    }
 }
 
-.show-enter-active{
-    transition: opacity 1s;
-}
-
-.show-enter{
-    opacity: 0;
-}
-
-.show-move{
-    transition: transform 0.2s;
-}
 </style>
