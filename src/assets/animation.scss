@@ -1,9 +1,13 @@
-.show-enter-active {
+.show-enter-active .show-leave-active{
     transition: all 2.5s;
 }
 
-.show-enter {
+.show-enter .show-leave-to{
     opacity: 0;
+}
+
+.show-move{
+    transition: transform 1s;
 }
 
 .pop-move {

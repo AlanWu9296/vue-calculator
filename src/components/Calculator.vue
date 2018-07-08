@@ -1,20 +1,27 @@
 <template >
-    <transition name="show" appear>
-        <div id="container">
-            <transition name="slide" appear>
-                <display-bar :displayData="displayData" id="display" v-if="animStep>=1"/>
-            </transition>
-            <div id="func-pad" is="transition-group" name="slide" appear v-if="animStep>=2">
-                <sym-button v-for="item in symbols.slice(0,3)" :key="item" :name="item" :timeInterval="150" :keyCodeDict="codeDict" :eventName="'symClicked'" @symClicked="handleSymbol($event)"/>
-            </div>
-            <div id="num-pad" is="transition-group" name="pop" appear v-if="animStep>=3">
-                <num-button v-for="num in numbers" :key="num" :name="num" :timeInterval="150" :keyCodeDict="codeDict" :eventName="'numClicked'" @numClicked="changeDisplay($event)"/>
-            </div>
-            <div id="symbol-pad" is="transition-group" name="drop" appear >
-                <sym-button v-for="item in functions" :key="item" :name="item" :timeInterval="150" :keyCodeDict="codeDict" :eventName="'symClicked'" @symClicked="handleSymbol($event)"/>
-            </div>
+    <div>
+        <p @click="isShowHelp=!isShowHelp" style="color:grey;font-size:16px;margin-top:0px">show help</p>
+        <div id="container" is="transition-group" name="show" appear>
+                <div id="calculator" :key="1">
+                    <transition name="slide" appear>
+                        <display-bar :displayData="displayData" id="display" v-if="animStep>=1"/>
+                    </transition>
+                    <div id="func-pad" is="transition-group" name="slide" appear v-if="animStep>=2">
+                        <sym-button v-for="item in symbols.slice(0,3)" :key="item" :name="item" :timeInterval="150" :keyCodeDict="codeDict" :eventName="'symClicked'" @symClicked="handleSymbol($event)"/>
+                    </div>
+                    <div id="num-pad" is="transition-group" name="pop" appear v-if="animStep>=3">
+                        <num-button v-for="num in numbers" :key="num" :name="num" :timeInterval="150" :keyCodeDict="codeDict" :eventName="'numClicked'" @numClicked="changeDisplay($event)"/>
+                    </div>
+                    <div id="symbol-pad" is="transition-group" name="drop" appear >
+                        <sym-button v-for="item in functions" :key="item" :name="item" :timeInterval="150" :keyCodeDict="codeDict" :eventName="'symClicked'" @symClicked="handleSymbol($event)"/>
+                    </div>
+                </div>
+    
+    
+                <help-display v-if="isShowHelp" :key="2"/>
+    
         </div>
-    </transition>
+    </div>
 </template>
 
 <script>
@@ -22,6 +29,7 @@ const _ = require('lodash')
 import DisplayBar from "./DisplayBar"
 import NumButton from "./NumButton"
 import SymButton from "./SymButton"
+import HelpDisplay from "./HelpDisplay"
 
 let numbers = ['1','2','3','4','5','6','7','8','9','0',".","C"]
 let symbols = ["AC","+/-","%",'+','-','*','/','=']
@@ -56,6 +64,7 @@ export default {
             displayData:"",
             isNew:true,
             isPrime:true,
+            isShowHelp:false,
             memData: null,
             operator: null,
             animStep:null
@@ -65,6 +74,7 @@ export default {
         DisplayBar,
         SymButton,
         NumButton,
+        HelpDisplay,
     },
     mounted(){
         let self = this
@@ -88,6 +98,8 @@ export default {
                     self.functions.push(functions[i])
                     i++
                 }else{
+                    setTimeout(function(){self.isShowHelp=true},2000)
+                    setTimeout(function(){self.isShowHelp=false},10000)
                     clearInterval(id)
                 }
             },
@@ -169,11 +181,16 @@ export default {
 @import "../assets/mixins.scss";
 
 #container{
+    display: flex;
+    margin: $length / 2 $length * 4;
+    justify-content: space-around;
+    align-items: center;
+}
+#calculator{
     border-bottom: 8px darkgrey solid;
     border-radius: 6% 6% 3% 3%;
     padding: 2%;
     background: linear-gradient(0deg, lightgrey, gainsboro);
-    margin: 0 auto;
     width: 500px;
     height: $length*8;
     display: grid;

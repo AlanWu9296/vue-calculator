@@ -29,6 +29,7 @@ export default {
 
 h1{
   margin: 10px;
-  color:green;
+  color:darkseagreen;
+  font-family:Arial, Helvetica, sans-serif;
 }
 </style>
